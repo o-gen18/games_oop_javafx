@@ -77,13 +77,13 @@ public class Logic {
                 if (table[row][cell]==1){
                     count++;
                 }
-                if(count==5){
+                if(count==size){
                     result=true;
                 }
                 if(table[cell][row]==1){
                     count2++;
                 }
-                if(count2==5){
+                if(count2==size){
                     result=true;
                 }
 
