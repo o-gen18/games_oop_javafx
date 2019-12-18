@@ -23,16 +23,29 @@ public class Logic {
 
     public boolean move(Cell source, Cell dest) {
         boolean rst = false;
-        int index = this.findBy(source);
-        if (index != -1) {
-            Cell[] steps = this.figures[index].way(source, dest);
-            if (steps.length > 0 && steps[steps.length - 1].equals(dest)) {
-                rst = true;
+        try {
+            int index = this.findBy(source);
+            if (index != -1) {
+                Cell[] steps = this.figures[index].way(source, dest);
+                if (steps.length > 0 && steps[steps.length - 1].equals(dest)) {
+                    for (int i = 0; i < steps.length; i++) {
+                        for (int k = 0; k != this.figures.length; k++) {
+                            if (this.figures[k] != null && this.figures[k].position().equals(steps[i])) {
+                                throw new IllegalStateException(String.format("The way is busy on the square %s", this.figures[k].position()));
+                            }
+                        }
+                    }
+                }
                 this.figures[index] = this.figures[index].copy(dest);
+                rst = true;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return rst;
     }
+
+
 
     public void clean() {
         for (int position = 0; position != this.figures.length; position++) {
