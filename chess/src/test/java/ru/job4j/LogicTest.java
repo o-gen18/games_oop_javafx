@@ -3,6 +3,10 @@ import org.junit.Test;
 import ru.job4j.chess.Logic;
 import ru.job4j.chess.firuges.Cell;
 import ru.job4j.chess.firuges.black.BishopBlack;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -22,14 +26,19 @@ public class LogicTest {
         boolean result = figure.move(Cell.D2, Cell.A5);
         assertThat(result, is(false));
     }
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void whenAnotherFigureStandsOnTheWay() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream stdout = System.out;
+        System.setOut(new PrintStream(out));
         BishopBlack bishop = new BishopBlack(Cell.G2);
         BishopBlack bishop2 = new BishopBlack(Cell.B7);
         Logic figure = new Logic();
         figure.add(bishop);
         figure.add(bishop2);
         figure.move(bishop.position(), bishop2.position());
+        assertThat(out.toString(), is("Cannot go on that square!" + System.lineSeparator()));
+        System.setOut(stdout);
     }
     @Test
     public void whenMoveSuccess() {

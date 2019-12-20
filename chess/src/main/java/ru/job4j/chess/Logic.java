@@ -40,7 +40,7 @@ public class Logic {
                 rst = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Cannot go on that square!");
         }
         return rst;
     }
