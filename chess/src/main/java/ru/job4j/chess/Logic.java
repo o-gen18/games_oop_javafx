@@ -2,6 +2,8 @@ package ru.job4j.chess;
 
 import ru.job4j.chess.firuges.Cell;
 import ru.job4j.chess.firuges.Figure;
+import ru.job4j.chess.firuges.black.KnightBlack;
+import ru.job4j.chess.firuges.white.KnightWhite;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -28,16 +30,9 @@ public class Logic {
             if (index != -1) {
                 Cell[] steps = this.figures[index].way(source, dest);
                 if (steps.length > 0 && steps[steps.length - 1].equals(dest)) {
-                    for (int i = 0; i < steps.length; i++) {
-                        for (int k = 0; k != this.figures.length; k++) {
-                            if (this.figures[k] != null && this.figures[k].position().equals(steps[i])) {
-                                throw new IllegalStateException(String.format("The way is busy on the square %s", this.figures[k].position()));
-                            }
-                        }
-                    }
+                    rst = this.wayIsFree(this.figures[index], steps);
+                    this.figures[index] = this.figures[index].copy(dest);
                 }
-                this.figures[index] = this.figures[index].copy(dest);
-                rst = true;
             }
         } catch (Exception e) {
             System.out.println("Cannot go on that square!");
@@ -63,6 +58,19 @@ public class Logic {
             }
         }
         return rst;
+    }
+
+    private boolean wayIsFree(Figure figure, Cell[] steps) {
+        if ( !(figure instanceof KnightBlack) && !(figure instanceof KnightWhite) ) {
+            for (int i = 0; i < steps.length; i++) {
+                for (int k = 0; k != this.figures.length; k++) {
+                    if (this.figures[k].position().equals(steps[i])) {
+                        throw new IllegalStateException(String.format("The way is busy on the square %s", this.figures[k].position()));
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     @Override
